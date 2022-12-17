@@ -9,4 +9,5 @@ client = tweepy.Client(
     access_token_secret=secret.access_token_secret
 )
 
-client.create_tweet(text = "Hello World")
+text = input("Tweet?>")
+client.create_tweet(text = text)
