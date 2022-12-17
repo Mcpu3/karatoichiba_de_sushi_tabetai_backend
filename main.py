@@ -15,7 +15,7 @@ client = tweepy.Client(
 
 def __main__() -> None:
 
-    start_time = (datetime.now() - timedelta(minutes=10)).replace(second=0, microsecond=0)
+    start_time = (datetime.now() - timedelta(minutes=1)).replace(second=0, microsecond=0)
     query = "-is:retweet to:" + secret.id
     print(start_time)
 
@@ -46,14 +46,14 @@ def __main__() -> None:
                     s = "リプが空っぽだよ！"
 
                 else:
+
                     tweets = client.search_recent_tweets(
                         query = s,
                         start_time = str(before24h.isoformat()) + "+09:00",
                         end_time = str(now.isoformat()) + "+09:00"
                     )
-                    l = []
-                    f=[]
 
+                    l = []
                     for t in str(tweets[0]).split(", "):
                         t = t.translate(str.maketrans({"[": None, "]": None, "<": None, ">": None, "'": None}))
                         t = t.replace("Tweet id=", "").replace("text=", "").replace("@"+secret.id, "").replace("　", "").replace("\n", "")
@@ -62,15 +62,17 @@ def __main__() -> None:
                             l.append(t.split(" ", 1)[1])
                     print(l)
 
-                    f= predict(l, './pn_predictor/misc/count_vectorizer.pickle', './pn_predictor/misc/model.pickle')
-                    print(f)
+                    if l != []:
+                        f= predict(l, './pn_predictor/misc/count_vectorizer.pickle', './pn_predictor/misc/model.pickle')
+                        print(f)
 
-                    if f.count(1) >= f.count(-1):
-                         s ="今日の君はポジィティブピ-スピ-ス"
-                    else :
-                          s="今日の君はネガティブだね・・・" 
-                    
-                     
+                        if f.count(1) >= f.count(-1):
+                            s += " のことはみんな大好きみたいだよ！"
+                        else :
+                            s += " のことはあんまり良く思われてないみたい……"
+                    else:
+                        s += " について話してる人はいなかったみたい……"
+
                 client.create_tweet(text = s, in_reply_to_tweet_id = p[0])
 
         start_time = datetime.now().replace(second=0, microsecond=0)
