@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 import time
 import tweepy
 
-#from pn_checker.predict import predict
+# from pn_checker.predict import predict
 import twitter.secret as secret
 
 client = tweepy.Client(
@@ -52,15 +52,23 @@ def __main__() -> None:
                         end_time = str(now.isoformat()) + "+09:00"
                     )
                     l = []
+                    f=[]
                     for t in str(tweets[0]).split(", "):
                         t = t.translate(str.maketrans({"[": None, "]": None, "<": None, ">": None, "'": None}))
                         t = t.replace("Tweet id=", "").replace("text=", "").replace("@"+secret.id, "").replace("　", "").replace("\n", "")
+                        print(t)
                         if t != "None":
                             l.append(t.split(" ", 1)[1])
                     print(l)
-                    #print(predict(l))
-                    s = "not blank"
+
+                    # f= predict(l)
+                    # print(f)
+
+                    # if -1 < f < 0 :
+                    #     s="今日の君はネガティブだね・・・"
                     
+                    # if 0 < f < 1 :
+                    #     s ="今日の君はポジィティブピスピス"
                 client.create_tweet(text = s, in_reply_to_tweet_id = p[0])
 
         start_time = datetime.now().replace(second=0, microsecond=0)
