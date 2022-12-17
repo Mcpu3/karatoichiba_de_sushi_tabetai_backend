@@ -1,4 +1,4 @@
-from datetime import datetime,timedelta
+from datetime import datetime, timedelta
 import time
 import tweepy
 
@@ -12,9 +12,7 @@ client = tweepy.Client(
     bearer_token = secret.bearer_token
 )
 
-start_time = (datetime.now() - timedelta(minutes=1)).replace(second=0, microsecond=0)
-print(start_time)
-
+start_time = (datetime.now() - timedelta(minutes=10000)).replace(second=0, microsecond=0)
 query = "-is:retweet to:" + secret.id
 
 while 1:
@@ -26,8 +24,16 @@ while 1:
         end_time = str(end_time.isoformat()) + "+09:00"
     )
 
+    data = []
     if tweets is not None:
-        print(tweets[0])
+        for t in str(tweets[0]).split(", "):
+            t = t.translate(str.maketrans({"[": None, "]": None, "<": None, ">": None, "'": None}))
+            t = t.replace("Tweet id=", "").replace("text=", "").replace("@megaro_sushi", "").replace("\n", "")
+            data.append([t.split(" ", 1)[0], t.split(" ", 1)[1]])
+
+    for p in data:
+        text = p[1]
+        client.create_tweet(text = text, in_reply_to_tweet_id = p[0])
 
     start_time = datetime.now().replace(second=0, microsecond=0)
     time.sleep(60)
