@@ -1,6 +1,4 @@
 from datetime import datetime, timedelta
-import time
-import tweepy
 
 from pn_predictor.predict_pns import predict
 
