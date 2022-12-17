@@ -15,7 +15,7 @@ def set_client(at, ats) -> None:
 def stream(client, rp_client, user_name) -> None:
 
     now = datetime.now().replace(second=0, microsecond=0)
-    before1d = (datetime.now() - timedelta(days=1)).replace(second=0, microsecond=0)
+    before1d = (datetime.now() - timedelta(days=1) + timedelta(minutes=3)).replace(second=0, microsecond=0)
 
     tweets = rp_client.search_recent_tweets(
         query = "-is:retweet from:" + user_name,
