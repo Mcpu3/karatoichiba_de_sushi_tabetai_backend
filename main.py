@@ -14,7 +14,7 @@ def __main__() -> None:
     while 1:
         start_time = reply.stream(rp_client, query, start_time)
         print(start_time)
-        time.sleep(6)
+        time.sleep(60)
 
 if __name__ == "__main__":
     __main__()
