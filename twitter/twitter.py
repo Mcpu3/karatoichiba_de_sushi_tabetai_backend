@@ -12,7 +12,7 @@ client = tweepy.Client(
     bearer_token = secret.bearer_token
 )
 
-start_time = (datetime.now() - timedelta(minutes=10000)).replace(second=0, microsecond=0)
+start_time = (datetime.now() - timedelta(minutes=1)).replace(second=0, microsecond=0)
 query = "-is:retweet to:" + secret.id
 
 while 1:
