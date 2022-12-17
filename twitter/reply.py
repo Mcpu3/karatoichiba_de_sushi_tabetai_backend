@@ -1,6 +1,16 @@
 from datetime import datetime, timedelta
+import tweepy
 
 from pn_predictor.predict_pns import predict
+
+def set_client(ck, cs, at, ats, bt) -> None:
+    return tweepy.Client(
+        consumer_key = ck,
+        consumer_secret = cs,
+        access_token = at,
+        access_token_secret = ats,
+        bearer_token = bt
+    )
 
 def stream(client, query, start_time, id) -> None:
 
@@ -40,7 +50,6 @@ def stream(client, query, start_time, id) -> None:
                 for t in str(tweets[0]).split(", "):
                     t = t.translate(str.maketrans({"[": None, "]": None, "<": None, ">": None, "'": None}))
                     t = t.replace("Tweet id=", "").replace("text=", "").replace("　", "").replace("\n", "")
-                    print(t)
                     if t != "None":
                         l.append(t.split(" ", 1)[1])
                 print(l)
@@ -50,11 +59,11 @@ def stream(client, query, start_time, id) -> None:
                     print(f)
 
                     if f.count(1) >= f.count(-1):
-                        s += " のことはみんな大好きみたいだよ！"
+                        s += "のことはみんな大好きみたいだよ！"
                     else :
-                        s += " のことはあんまり良く思われてないみたい……"
+                        s += "のことはあんまり良く思われてないみたい……"
                 else:
-                    s += " について話してる人はいなかったみたい……"
+                    s += "について話してる人はいなかったみたい……"
 
             client.create_tweet(text = s, in_reply_to_tweet_id = p[0])
 
