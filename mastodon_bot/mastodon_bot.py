@@ -87,7 +87,7 @@ class MastodonReply:
         
         return oneday_toot_list
 
-    def get_any_day_toot(self, day: int) -> list:
+    def __get_any_day_toot(self, day: int) -> list:
         before_any_day_time = datetime.now(tz=timezone.utc) - timedelta(days=day)
         stop_bool = False
         oneday_toot_list = []
@@ -106,8 +106,8 @@ class MastodonReply:
         
         return oneday_toot_list
     
-    def predict_reply_message(self, reply_to_status, message: str):
-        toot_list = self.get_any_day_toot(7)
+    def __predict_reply_message(self, reply_to_status, message: str):
+        toot_list = self.__get_any_day_toot(7)
         predict_sentence_list = []
         sentence = message.replace(' ', '').replace('　', '').replace('\n', '')
         # print(sentence)
@@ -130,7 +130,7 @@ class MastodonReply:
 
         self.mastodon.status_reply(reply_to_status, sentence)
         
-    def predict_reply_user(self, reply_to_status, account_id: str, account_name: str):
+    def __predict_reply_user(self, reply_to_status, account_id: str, account_name: str):
         toot_list = self.__get_oneday_toot_user(account_id)
         sentence = account_name
         if toot_list != []:
@@ -150,6 +150,6 @@ class MastodonReply:
         mentions = self.__get_reply()
         for m in mentions:
             if '調子を教えて' in m['text']:
-                self.predict_reply_user(m['status'], m['account_id'], m['account_name'])
+                self.__predict_reply_user(m['status'], m['account_id'], m['account_name'])
             else:
-                self.predict_reply_message(m['status'], m['text'])
+                self.__predict_reply_message(m['status'], m['text'])
