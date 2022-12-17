@@ -60,9 +60,9 @@ def __main__() -> None:
                         print(t)
                         if t != "None":
                             l.append(t.split(" ", 1)[1])
-                    print(f)
+                    print(l)
 
-                    f= predict(f, './pn_predictor/misc/count_vectorizer.pickle', './pn_predictor/misc/model.pickle')
+                    f= predict(l, './pn_predictor/misc/count_vectorizer.pickle', './pn_predictor/misc/model.pickle')
                     print(f)
 
                     if f.count(1) >= f.count(-1):
