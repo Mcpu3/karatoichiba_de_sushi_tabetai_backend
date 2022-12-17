@@ -29,11 +29,15 @@ while 1:
         for t in str(tweets[0]).split(", "):
             t = t.translate(str.maketrans({"[": None, "]": None, "<": None, ">": None, "'": None}))
             t = t.replace("Tweet id=", "").replace("text=", "").replace("@megaro_sushi", "").replace("\n", "")
-            data.append([t.split(" ", 1)[0], t.split(" ", 1)[1]])
+            print(t)
+            if t != "None":
+                data.append([t.split(" ", 1)[0], t.split(" ", 1)[1]])
 
-    for p in data:
-        text = p[1]
-        client.create_tweet(text = text, in_reply_to_tweet_id = p[0])
+        for p in data:
+            text = p[1]
+            client.create_tweet(text = text, in_reply_to_tweet_id = p[0])
+            print(text)
 
     start_time = datetime.now().replace(second=0, microsecond=0)
+    print("Done")
     time.sleep(60)
