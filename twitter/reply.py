@@ -41,7 +41,7 @@ def stream(client, query, start_time, id) -> None:
             else:
 
                 tweets = client.search_recent_tweets(
-                    query = s,
+                    query = "-is:retweet " + s,
                     start_time = str(before24h.isoformat()) + "+09:00",
                     end_time = str(now.isoformat()) + "+09:00"
                 )
