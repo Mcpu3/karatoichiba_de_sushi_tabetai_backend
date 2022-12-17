@@ -7,6 +7,7 @@ from .misc.translate import translate_list
 
 def predict_pns(texts: List[str], count_vectorizer_path: str, model_path: str) -> List[int]:
     translated_texts = translate_list('JA', 'EN', texts)
+    print(translated_texts)
     predicted_pns = predict(translated_texts, count_vectorizer_path, model_path)
 
     return predicted_pns
