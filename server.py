@@ -36,7 +36,7 @@ def execute_userinfo() -> None:
     session["oauth_token_secret"] = access_token["oauth_token_secret"]
 
     data = utils.json_load()
-    data[session["user_name"]] = [access_token["oauth_token"], access_token["oauth_token_secret"]]
+    data[session["user_name"]] = [session["user_name"], session["oauth_token"], session["oauth_token_secret"]]
     utils.json_write(data)
 
     return redirect(url_for("index"))

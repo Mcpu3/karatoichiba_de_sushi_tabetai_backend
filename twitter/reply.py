@@ -4,13 +4,13 @@ import tweepy
 from pn_predictor.predict_pns import predict
 from . import secret
 
-def set_client(ck, cs, at, ats, bt) -> None:
+def set_client() -> None:
     return tweepy.Client(
-        consumer_key = ck,
-        consumer_secret = cs,
-        access_token = at,
-        access_token_secret = ats,
-        bearer_token = bt
+        consumer_key = secret.consumer_key,
+        consumer_secret = secret.consumer_secret,
+        access_token = secret.access_token,
+        access_token_secret = secret.access_token_secret,
+        bearer_token = secret.bearer_token
     )
 
 def stream(client, query, start_time) -> None:
