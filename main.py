@@ -17,7 +17,7 @@ def __main__() -> None:
 
         start_time = reply.stream(rp_client, query, start_time)
 
-        auto_tweet_time = datetime.now().strftime("%H%M")
+        auto_tweet_time = "0000"
         if datetime.now().strftime("%H%M") == auto_tweet_time: 
             data = utils.json_load()
             for tk in data:
