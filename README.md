@@ -1,8 +1,9 @@
-# tweepyの導入<br/>
+# ライブラリの導入
 `pip install tweepy`<br/>
+`pip install requests requests_oauthlib`<br/>
 
-# Botの動かし方<br/>
-* Discordで共有したsecret.pyというファイルをtwitterフォルダ内に配置
+# Botの動かし方
+* Discordで共有したsecret.pyというファイルをtwitterフォルダ内に配置<br/>
 * ターミナルで`py twitter/twitter.py`を実行<br/>
 
 # PN判定
