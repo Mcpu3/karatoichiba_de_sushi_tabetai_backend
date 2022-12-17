@@ -3,7 +3,7 @@ from pickle import load
 from typing import List
 
 
-def predict_pns_by_dictionary(texts: List[str], count_vectorizer_path: str='./count_vectorizer.pickle', model_path: str='./model.pickle') -> List[float]:
+def predict_pns_by_dataset(texts: List[str], count_vectorizer_path: str='./count_vectorizer.pickle', model_path: str='./model.pickle') -> List[int]:
     with open(count_vectorizer_path, 'rb') as f:
         count_vectorizer = load(f)
     bag_of_words = count_vectorizer.transform(texts)
@@ -26,7 +26,7 @@ def __main__() -> None:
     __create_argument_parser__()
     texts_size = int(input('Texts size: '))
     texts = [input(f'Texts[{i}]: ') for i in range(texts_size)]
-    predicted_pns = predict_pns_by_dictionary(texts, args.count_vectorizer_path, args.model_path)
+    predicted_pns = predict_pns_by_dataset(texts, args.count_vectorizer_path, args.model_path)
     for text, predicted_pn in zip(texts, predicted_pns):
         print(text + ': ' + str(predicted_pn))
 
