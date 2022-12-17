@@ -12,10 +12,22 @@ client = tweepy.Client(
     bearer_token = secret.bearer_token
 )
 
+start_time = (datetime.now() - timedelta(minutes=1)).replace(second=0, microsecond=0)
+print(start_time)
+
 query = "-is:retweet to:" + secret.id
 
-tweets = client.search_recent_tweets(query = query, max_results = 10)
+while 1:
+    
+    end_time = datetime.now().replace(second=0, microsecond=0)
+    tweets = client.search_recent_tweets(
+        query = query,
+        start_time = str(start_time.isoformat()) + "+09:00",
+        end_time = str(end_time.isoformat()) + "+09:00"
+    )
 
-if tweets is not None:
-    for tweet in tweets:
-        print(tweet)
+    if tweets is not None:
+        print(tweets[0])
+
+    start_time = datetime.now().replace(second=0, microsecond=0)
+    time.sleep(60)
