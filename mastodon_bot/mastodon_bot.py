@@ -148,14 +148,8 @@ class MastodonReply:
 
     def check_reply(self):
         mentions = self.__get_reply()
-        # print(mentions[0])
-        # exit()
         for m in mentions:
-            # print(m)
             if '調子を教えて' in m['text']:
                 self.predict_reply_user(m['status'], m['account_id'], m['account_name'])
             else:
                 self.predict_reply_message(m['status'], m['text'])
-            # account_id = m['account_id']
-            # toot_list = self.__get_oneday_toot_user(account_id)
-            # self.mastodon.status_reply(m['status'], f'君は今日{str(len(toot_list))}件のトゥートをしたよ！！')
