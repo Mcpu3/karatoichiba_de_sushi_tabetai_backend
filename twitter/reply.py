@@ -35,7 +35,7 @@ def stream(client, query, start_time) -> None:
 
             s = str(p[1])
             now = datetime.now().replace(second=0, microsecond=0)
-            before24h = (datetime.now() - timedelta(days=1)).replace(second=0, microsecond=0)
+            before3d = (datetime.now() - timedelta(days=3)).replace(second=0, microsecond=0)
 
             if s.count(" ") + s.count("　") == len(s):
                 s = "リプが空っぽだよ！"
@@ -44,7 +44,7 @@ def stream(client, query, start_time) -> None:
 
                 tweets = client.search_recent_tweets(
                     query = "-is:retweet " + s,
-                    start_time = str(before24h.isoformat()) + "+09:00",
+                    start_time = str(before3d.isoformat()) + "+09:00",
                     end_time = str(now.isoformat()) + "+09:00",
                     max_results = 100
                 )
