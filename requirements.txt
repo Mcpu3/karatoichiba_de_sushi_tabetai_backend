@@ -22,3 +22,5 @@ tqdm==4.64.1
 tweepy==4.12.1
 virtualenv==20.17.1
 wrapt==1.14.1
+lxml==4.9.1
+Mastodon.py==1.5.1
