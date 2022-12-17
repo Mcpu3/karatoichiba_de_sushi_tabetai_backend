@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 import time
 import tweepy
 
-# from pn_checker.predict import predict
+from pn_predictor.predict_pns import predict
 import twitter.secret as secret
 
 client = tweepy.Client(
@@ -15,7 +15,7 @@ client = tweepy.Client(
 
 def __main__() -> None:
 
-    start_time = (datetime.now() - timedelta(minutes=1)).replace(second=0, microsecond=0)
+    start_time = (datetime.now() - timedelta(minutes=10)).replace(second=0, microsecond=0)
     query = "-is:retweet to:" + secret.id
     print(start_time)
 
@@ -53,22 +53,24 @@ def __main__() -> None:
                     )
                     l = []
                     f=[]
+
                     for t in str(tweets[0]).split(", "):
                         t = t.translate(str.maketrans({"[": None, "]": None, "<": None, ">": None, "'": None}))
                         t = t.replace("Tweet id=", "").replace("text=", "").replace("@"+secret.id, "").replace("　", "").replace("\n", "")
                         print(t)
                         if t != "None":
                             l.append(t.split(" ", 1)[1])
-                    print(l)
+                    print(f)
 
-                    # f= predict(l)
-                    # print(f)
+                    f= predict(f, './pn_predictor/misc/count_vectorizer.pickle', './pn_predictor/misc/model.pickle')
+                    print(f)
 
-                    # if -1 < f < 0 :
-                    #     s="今日の君はネガティブだね・・・"
+                    if f.count(1) >= f.count(-1):
+                         s ="今日の君はポジィティブピ-スピ-ス"
+                    else :
+                          s="今日の君はネガティブだね・・・" 
                     
-                    # if 0 < f < 1 :
-                    #     s ="今日の君はポジィティブピスピス"
+                     
                 client.create_tweet(text = s, in_reply_to_tweet_id = p[0])
 
         start_time = datetime.now().replace(second=0, microsecond=0)
