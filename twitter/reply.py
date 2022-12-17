@@ -20,7 +20,7 @@ def stream(client, query, start_time) -> None:
         query = query,
         start_time = str(start_time.isoformat()) + "+09:00",
         end_time = str(end_time.isoformat()) + "+09:00",
-        max_results = 100
+        max_results = 20
     )
 
     data = []
@@ -46,7 +46,7 @@ def stream(client, query, start_time) -> None:
                     query = "-is:retweet " + s,
                     start_time = str(before3d.isoformat()) + "+09:00",
                     end_time = str(now.isoformat()) + "+09:00",
-                    max_results = 100
+                    max_results = 20
                 )
 
                 l = []
