@@ -9,7 +9,7 @@ joblib==1.2.0
 lazy-object-proxy==1.8.0
 mccabe==0.7.0
 mecab==0.996.3
-neologdn==0.5.1
+#neologdn==0.5.1
 numpy==1.23.5
 platformdirs==2.6.0
 pycodestyle==2.10.0
@@ -21,5 +21,6 @@ toml==0.10.2
 tomli==2.0.1
 tomlkit==0.11.6
 tqdm==4.64.1
+tweepy==4.12.1
 virtualenv==20.17.1
 wrapt==1.14.1
