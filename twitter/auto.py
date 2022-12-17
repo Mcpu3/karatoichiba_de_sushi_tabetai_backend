@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 import tweepy
 
-from pn_predictor.predict_pns import predict
+from pn_predictor.predict_pns import predict_pns
 from . import secret
 
 def set_client(at, ats) -> None:
@@ -34,7 +34,7 @@ def stream(client, rp_client, user_name) -> None:
 
     s = ""
     if l != []:
-        f= predict(l, './pn_predictor/misc/count_vectorizer.pickle', './pn_predictor/misc/model.pickle')
+        f= predict_pns(l, './pn_predictor/misc/count_vectorizer.pickle', './pn_predictor/misc/model.pickle')
         print(f)
 
         if f.count(1) >= f.count(-1):
