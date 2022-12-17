@@ -1,6 +1,5 @@
 # ライブラリの導入
-`pip install tweepy`<br/>
-`pip install requests_oauthlib`<br/>
+`pip install -r requirements.txt`<br/>
 
 # Botの動かし方
 * Discordで共有したsecret.pyというファイルをtwitterフォルダ内に配置<br/>
