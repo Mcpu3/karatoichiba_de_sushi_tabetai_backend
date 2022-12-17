@@ -1,7 +1,6 @@
-from datetime import datetime, timedelta
 import time
+from datetime import datetime, timedelta
 
-from pn_predictor.predict_pns import predict
 import twitter.secret as secret
 import twitter.reply as reply
 
@@ -13,9 +12,9 @@ def __main__() -> None:
     print(start_time)
 
     while 1:
-        start_time = reply.stream(rp_client, query, start_time, secret.id)
+        start_time = reply.stream(rp_client, query, start_time)
         print(start_time)
         time.sleep(60)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     __main__()

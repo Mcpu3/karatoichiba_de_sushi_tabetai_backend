@@ -1,20 +1,45 @@
+from urllib.parse import parse_qsl
 from requests_oauthlib import OAuth1Session
-
-import secret
+from . import secret
 
 consumer_key = secret.consumer_key
 consumer_secret = secret.consumer_secret
 
-callback_url = "https://twitter.com/megaro_sushi"
-request_endpoint_url = "https://api.twitter.com/oauth/request_token"
-authenticate_url = "https://api.twitter.com/oauth/authenticate"
+base_url = "https://api.twitter.com/"
+request_token_url = base_url + "oauth/request_token"
+authenticate_url = base_url + "oauth/authenticate"
+access_token_url = base_url + "oauth/access_token"
 
-session_req = OAuth1Session(consumer_key, consumer_secret)
-response_req = session_req.post(request_endpoint_url, params={"oauth_callback": callback_url})
-response_req_text = response_req.text
+def get_twitter_request_token(oauth_callback):
 
-oauth_token_kvstr = response_req_text.split("&")
-token_dict = {x.split("=")[0]: x.split("=")[1] for x in oauth_token_kvstr}
-oauth_token = token_dict["oauth_token"]
+    twitter = OAuth1Session(consumer_key, consumer_secret)
+    response = twitter.post(
+        request_token_url,
+        params={"oauth_callback": oauth_callback}
+    )
 
-print("Authentication URL:", f"{authenticate_url}?oauth_token={oauth_token}")
+    request_token = dict(parse_qsl(response.content.decode("utf-8")))
+
+    authenticate_endpoint = "%s?oauth_token=%s" \
+        % (authenticate_url, request_token["oauth_token"])
+
+    request_token.update({"authenticate_endpoint": authenticate_endpoint})
+    return request_token["authenticate_endpoint"]
+
+
+def get_twitter_access_token(oauth_token, oauth_verifier):
+
+    twitter = OAuth1Session(
+        consumer_key,
+        consumer_secret,
+        oauth_token,
+        oauth_verifier,
+    )
+
+    response = twitter.post(
+        access_token_url,
+        params={"oauth_verifier": oauth_verifier}
+    )
+
+    access_token = dict(parse_qsl(response.content.decode("utf-8")))
+    return access_token
