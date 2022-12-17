@@ -20,7 +20,6 @@ def get_twitter_request_token(oauth_callback):
 
     request_token = dict(parse_qsl(response.content.decode("utf-8")))
 
-    # リクエストトークンから認証画面のURLを生成
     authenticate_endpoint = "%s?oauth_token=%s" \
         % (authenticate_url, request_token["oauth_token"])
 
