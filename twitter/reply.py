@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 import tweepy
 
 from pn_predictor.predict_pns import predict
+from . import secret
 
 def set_client(ck, cs, at, ats, bt) -> None:
     return tweepy.Client(
@@ -12,7 +13,7 @@ def set_client(ck, cs, at, ats, bt) -> None:
         bearer_token = bt
     )
 
-def stream(client, query, start_time, id) -> None:
+def stream(client, query, start_time) -> None:
 
     end_time = datetime.now().replace(second=0, microsecond=0)
     tweets = client.search_recent_tweets(
@@ -25,7 +26,7 @@ def stream(client, query, start_time, id) -> None:
     if tweets is not None:
         for t in str(tweets[0]).split(", "):
             t = t.translate(str.maketrans({"[": None, "]": None, "<": None, ">": None, "'": None}))
-            t = t.replace("Tweet id=", "").replace("text=", "").replace("@"+id, "").replace("\n", "")
+            t = t.replace("Tweet id=", "").replace("text=", "").replace("@" + secret.id, "").replace("\n", "")
             if t != "None":
                 data.append([t.split(" ", 1)[0], t.split(" ", 1)[1]])
 

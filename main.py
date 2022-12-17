@@ -12,7 +12,7 @@ def __main__() -> None:
     print(start_time)
 
     while 1:
-        start_time = reply.stream(rp_client, query, start_time, secret.id)
+        start_time = reply.stream(rp_client, query, start_time)
         print(start_time)
         time.sleep(6)
 
