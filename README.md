@@ -2,11 +2,8 @@
 `pip install tweepy`<br/>
 
 ## Botの動かし方<br/>
-* **GitHubに公開されない新しいファイルを作成**<br/>
-(`twitter_secret.py`という名前のファイルはGitにコミットされないようになっているため分からなければこの名前にしておけばOK)<br/>
-* 作ったファイルに`twitter.py`のコードを全てコピー<br/>
-* `tweepy.client()`の中にDiscordで共有した各種トークンをコピペ<br/>
-* ターミナルで実行<br/>
+* Discordで共有したsecret.pyというファイルをtwitterフォルダ内に配置
+* ターミナルで`py twitter/twitter.py`を実行<br/>
 
 ## コミットの前に
 `twitter.py`の中にトークンが書かれていないか必ず確認してからコミットすること<br/>
