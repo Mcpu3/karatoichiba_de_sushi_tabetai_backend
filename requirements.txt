@@ -8,8 +8,6 @@ isort==5.11.1
 joblib==1.2.0
 lazy-object-proxy==1.8.0
 mccabe==0.7.0
-mecab==0.996.3
-#neologdn==0.5.1
 numpy==1.23.5
 platformdirs==2.6.0
 pycodestyle==2.10.0
