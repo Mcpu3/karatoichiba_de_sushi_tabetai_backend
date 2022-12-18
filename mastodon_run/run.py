@@ -69,7 +69,7 @@ class MastodonReply:
 
             return text
 
-    def __get_oneday_toot_user(self, account_id: str = None) -> list:
+    def __get_oneday_toot_user(self, account_id: str = None, limit: int = 20) -> list:
         before_a_day_time = datetime.now(tz=timezone.utc) - timedelta(days=1)
         stop_bool = False
         oneday_toot_list = []
@@ -79,6 +79,9 @@ class MastodonReply:
             for toot in toot_list:
                 if toot['created_at'] > before_a_day_time:
                     if toot['account']['id'] == account_id:
+                        if len(oneday_toot_list) >= limit:
+                            stop_bool = True
+                            break
                         toot_temp = self.__extract_content_text(toot['content'])
                         oneday_toot_list.append(toot_temp)
                 else:
@@ -88,7 +91,7 @@ class MastodonReply:
         
         return oneday_toot_list
 
-    def __get_any_day_toot(self, day: int) -> list:
+    def __get_any_day_toot(self, day: int, limit: int = 20) -> list:
         before_any_day_time = datetime.now(tz=timezone.utc) - timedelta(days=day)
         stop_bool = False
         oneday_toot_list = []
@@ -98,6 +101,9 @@ class MastodonReply:
             for toot in toot_list:
                 if toot['created_at'] > before_any_day_time:
                     if not toot['account']['bot']:
+                        if len(oneday_toot_list) >= limit:
+                            stop_bool = True
+                            break
                         toot_temp = self.__extract_content_text(toot['content'])
                         oneday_toot_list.append(toot_temp)
                 else:
