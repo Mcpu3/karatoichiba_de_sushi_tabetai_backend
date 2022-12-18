@@ -107,7 +107,7 @@ class MastodonReply:
         
         return oneday_toot_list
     
-    def __predict_reply_message(self, reply_to_status, message: str, limit: int = 20):
+    def __predict_reply_message(self, reply_to_status, message: str, limit: int = 10):
         toot_list = self.__get_any_day_toot(7)
         predict_sentence_list = []
         sentence = message.replace(' ', '').replace('　', '').replace('\n', '')
@@ -134,7 +134,7 @@ class MastodonReply:
 
         self.mastodon.status_reply(reply_to_status, sentence)
         
-    def __predict_reply_user(self, reply_to_status, account_id: str, account_name: str, limit: int = 20):
+    def __predict_reply_user(self, reply_to_status, account_id: str, account_name: str, limit: int = 10):
         toot_list = self.__get_oneday_toot_user(account_id)
         toot_list[:limit]
         sentence = account_name
