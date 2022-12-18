@@ -1,17 +1,21 @@
 from mastodon import Mastodon
-from mastodon_bot.secret import secret
 from datetime import datetime, timezone, timedelta
 from lxml import html
 from pn_predictor.predict_pns import predict_pns
+import os, dotenv, random
 
 class MastodonReply:
     def __init__(self) -> None:
         self.mastodon = self.__login()
     
     def __login(self) -> Mastodon:
+        dotenv.load_dotenv()
+        instance = os.environ['MT_INSTANCE']
+        token = os.environ['MT_TOKEN']
+
         mastodon = Mastodon(
-            api_base_url = secret.instance,
-            access_token = secret.token
+            api_base_url = instance,
+            access_token = token
         )
 
         return mastodon
@@ -20,7 +24,6 @@ class MastodonReply:
     def __remove_timeout_notification(notifications: list) -> list:
         before_a_minute_time = (datetime.now(tz=timezone.utc) - timedelta(minutes=1)).replace(second=0, microsecond=0)
         output = []
-        # print(notifications[0])
         for n in notifications:
             if n['created_at'] > before_a_minute_time and n['type'] == 'mention' and not n['account']['username'] == 'karatoichiba_sushi':
                 output.append(n)
@@ -37,8 +40,6 @@ class MastodonReply:
     @staticmethod
     def __extract_notification_information(notification) -> list:
         def __extract_content_text(content: str) -> str:
-            if content == '':
-                return ''
             t = html.fromstring(content)
             text = t.text_content().strip()
             text = text.replace('@karatoichiba_sushi', '')
@@ -68,7 +69,7 @@ class MastodonReply:
 
             return text
 
-    def __get_oneday_toot_user(self, account_id: str = None) -> list:
+    def __get_oneday_toot_user(self, account_id: str = None, limit: int = 20) -> list:
         before_a_day_time = datetime.now(tz=timezone.utc) - timedelta(days=1)
         stop_bool = False
         oneday_toot_list = []
@@ -78,6 +79,9 @@ class MastodonReply:
             for toot in toot_list:
                 if toot['created_at'] > before_a_day_time:
                     if toot['account']['id'] == account_id:
+                        if len(oneday_toot_list) >= limit:
+                            stop_bool = True
+                            break
                         toot_temp = self.__extract_content_text(toot['content'])
                         oneday_toot_list.append(toot_temp)
                 else:
@@ -87,7 +91,7 @@ class MastodonReply:
         
         return oneday_toot_list
 
-    def __get_any_day_toot(self, day: int) -> list:
+    def __get_any_day_toot(self, day: int, limit: int = 20) -> list:
         before_any_day_time = datetime.now(tz=timezone.utc) - timedelta(days=day)
         stop_bool = False
         oneday_toot_list = []
@@ -97,6 +101,9 @@ class MastodonReply:
             for toot in toot_list:
                 if toot['created_at'] > before_any_day_time:
                     if not toot['account']['bot']:
+                        if len(oneday_toot_list) >= limit:
+                            stop_bool = True
+                            break
                         toot_temp = self.__extract_content_text(toot['content'])
                         oneday_toot_list.append(toot_temp)
                 else:
@@ -110,23 +117,23 @@ class MastodonReply:
         toot_list = self.__get_any_day_toot(7)
         predict_sentence_list = []
         sentence = message.replace(' ', '').replace('　', '').replace('\n', '')
-        # print(sentence)
         for t in toot_list:
-            # print(t)
             if sentence in t:
-                print(t)
                 predict_sentence_list.append(t)
 
         if predict_sentence_list != []:
             f= predict_pns(predict_sentence_list, './pn_predictor/misc/count_vectorizer.pickle', './pn_predictor/misc/model.pickle')
-            print(f)
+            print(f'mastodon_bot : (word){sentence} {str(f)}')
 
-            if f.count(1) >= f.count(-1):
-                sentence += "のことはみんな大好きみたいだよ！"
-            else :
-                sentence += "のことはあんまり良く思われてないみたい……"
+            positive_rate = f.count(1) / len(f)
+            if positive_rate > 0.85:
+                sentence += 'のことはみんな大好きみたいだよ！'
+            elif positive_rate > 0.50:
+                sentence += 'のことは結構よく思われてるみたい！'
+            else:
+                sentence += 'のことはあんまり良く思われてないみたい……'
         else:
-            sentence += "について話してる人はいなかったみたい……"
+            sentence += 'について話してる人はいなかったみたい……'
 
         self.mastodon.status_reply(reply_to_status, sentence)
         
@@ -135,14 +142,17 @@ class MastodonReply:
         sentence = account_name
         if toot_list != []:
             f = predict_pns(toot_list, './pn_predictor/misc/count_vectorizer.pickle', './pn_predictor/misc/model.pickle')
-            print(f)
+            print(f'mastodon_bot : (user){account_name} {str(f)}')
 
+            positive_sentences = ['は今日一日楽しそうだったね！いぇいいぇい！', 'は今日一日楽しそうだったね！明日もいい日になあれ！', 'は今日を満喫できたね！']
+            negative_sentences = ['はネガティブがーーん', 'はなんだか元気がないね……。がが～ん', 'はなんだか元気がないね……。明日がいい日になりますように！']
+            non_toot_sentences = ['は今日忙しかったのかな？しっかり休もう！', 'はリアルが充実してるんだね！']
             if f.count(1) >= f.count(-1):
-                sentence += "は今日一日はっぴーいぇいいぇい"
+                sentence += positive_sentences[random.randrange(len(positive_sentences))]
             else :
-                sentence += "はネガティブがー－ん"
+                sentence += negative_sentences[random.randrange(len(negative_sentences))]
         else:
-            sentence += "今日はトゥートしてないね！"
+            sentence += non_toot_sentences[random.randrange(len(non_toot_sentences))]
 
         self.mastodon.status_reply(reply_to_status, sentence)
 
