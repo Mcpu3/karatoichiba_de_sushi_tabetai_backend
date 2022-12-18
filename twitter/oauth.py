@@ -1,9 +1,11 @@
+import os
+import dotenv
 from urllib.parse import parse_qsl
 from requests_oauthlib import OAuth1Session
-from . import secret
 
-consumer_key = secret.consumer_key
-consumer_secret = secret.consumer_secret
+dotenv.load_dotenv()
+consumer_key = os.environ["CONSUMER_KEY"]
+consumer_secret = os.environ["CONSUMER_SECRET"]
 
 base_url = "https://api.twitter.com/"
 request_token_url = base_url + "oauth/request_token"

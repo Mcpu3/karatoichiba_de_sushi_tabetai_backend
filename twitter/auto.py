@@ -1,13 +1,18 @@
 from datetime import datetime, timedelta
+import os
+import dotenv
 import tweepy
 
 from pn_predictor.predict_pns import predict_pns
-from . import secret
+
+dotenv.load_dotenv()
+consumer_key = os.environ["CONSUMER_KEY"]
+consumer_secret = os.environ["CONSUMER_SECRET"]
 
 def set_client(at, ats) -> None:
     return tweepy.Client(
-        consumer_key = secret.consumer_key,
-        consumer_secret = secret.consumer_secret,
+        consumer_key = consumer_key,
+        consumer_secret = consumer_secret,
         access_token = at,
         access_token_secret = ats
     )
