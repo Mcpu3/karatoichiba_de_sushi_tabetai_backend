@@ -2,7 +2,7 @@ from mastodon import Mastodon
 from datetime import datetime, timezone, timedelta
 from lxml import html
 from pn_predictor.predict_pns import predict_pns
-import os, dotenv
+import os, dotenv, random
 
 class MastodonReply:
     def __init__(self) -> None:
@@ -117,14 +117,17 @@ class MastodonReply:
 
         if predict_sentence_list != []:
             f= predict_pns(predict_sentence_list, './pn_predictor/misc/count_vectorizer.pickle', './pn_predictor/misc/model.pickle')
-            print(f)
+            print(f'mastodon_bot : (word){sentence} {str(f)}')
 
-            if f.count(1) >= f.count(-1):
-                sentence += "のことはみんな大好きみたいだよ！"
-            else :
-                sentence += "のことはあんまり良く思われてないみたい……"
+            positive_rate = f.count(1) / len(f)
+            if positive_rate > 0.85:
+                sentence += 'のことはみんな大好きみたいだよ！'
+            elif positive_rate > 0.50:
+                sentence += 'のことは結構よく思われてるみたい！'
+            else:
+                sentence += 'のことはあんまり良く思われてないみたい……'
         else:
-            sentence += "について話してる人はいなかったみたい……"
+            sentence += 'について話してる人はいなかったみたい……'
 
         self.mastodon.status_reply(reply_to_status, sentence)
         
@@ -133,14 +136,17 @@ class MastodonReply:
         sentence = account_name
         if toot_list != []:
             f = predict_pns(toot_list, './pn_predictor/misc/count_vectorizer.pickle', './pn_predictor/misc/model.pickle')
-            print(f)
+            print(f'mastodon_bot : (user){account_name} {str(f)}')
 
+            positive_sentences = ['は今日一日楽しそうだったね！いぇいいぇい！', 'は今日一日楽しそうだったね！明日もいい日になあれ！', 'は今日を満喫できたね！']
+            negative_sentences = ['はネガティブがーーん', 'はなんだか元気がないね……。がが～ん', 'はなんだか元気がないね……。明日がいい日になりますように！']
+            non_toot_sentences = ['は今日忙しかったのかな？しっかり休もう！', 'はリアルが充実してるんだね！']
             if f.count(1) >= f.count(-1):
-                sentence += "は今日一日はっぴーいぇいいぇい"
+                sentence += positive_sentences[random.randrange(len(positive_sentences))]
             else :
-                sentence += "はネガティブがー－ん"
+                sentence += negative_sentences[random.randrange(len(negative_sentences))]
         else:
-            sentence += "今日はトゥートしてないね！"
+            sentence += non_toot_sentences[random.randrange(len(non_toot_sentences))]
 
         self.mastodon.status_reply(reply_to_status, sentence)
 
