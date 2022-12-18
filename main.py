@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 import twitter.auto as auto
 import twitter.reply as reply
 import twitter.utils as utils
-from mastodon_run.run import MastodonReply
+from mstdn.run import MastodonReply
 
 dotenv.load_dotenv()
 id = os.environ["ID"]
