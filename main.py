@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 import twitter.auto as auto
 import twitter.reply as reply
 import twitter.utils as utils
+from mastodon_run.run import MastodonReply
 
 dotenv.load_dotenv()
 id = os.environ["ID"]
@@ -21,6 +22,7 @@ def __main__() -> None:
     while 1:
 
         start_time = reply.stream(rp_client, query, start_time)
+        print(start_time)
 
         auto_tweet_time = "0000"
         if datetime.now().strftime("%H%M") == auto_tweet_time: 
@@ -29,7 +31,8 @@ def __main__() -> None:
                 client = auto.set_client(data[tk][1], data[tk][2])
                 auto.stream(client, rp_client, data[tk][0])
 
-        print(start_time)
+        MastodonReply().check_reply()
+
         time.sleep(60)
 
 if __name__ == "__main__":

@@ -15,4 +15,10 @@ unzip pn_predictor/misc/count_vectorizer.zip -d pn_predictor/misc/
 unzip pn_predictor/misc/model.zip -d pn_predictor/misc/
 ```
 
+# mastodon_botの使い方
+
+1. Discordの重要スレッドで共有したsecret.pyをmastodon_botフォルダ内に配置<br/>
+2. `mastodon_bot.py`からMastodonReplyをimportする。<br/>
+3. `MastodonReply().check_reply()`を１分ごとに実行する。<br/>
+
 =======
