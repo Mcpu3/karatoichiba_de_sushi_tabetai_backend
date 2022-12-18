@@ -1,16 +1,20 @@
+import os
+import dotenv
 import time
 from datetime import datetime, timedelta
 
 import twitter.auto as auto
-import twitter.secret as secret
 import twitter.reply as reply
 import twitter.utils as utils
+
+dotenv.load_dotenv()
+id = os.environ["ID"]
 
 def __main__() -> None:
 
     rp_client = reply.set_client()
     start_time = (datetime.now() - timedelta(minutes=1)).replace(second=0, microsecond=0)
-    query = "-is:retweet to:" + secret.id
+    query = "-is:retweet to:" + id
     print(start_time)
 
     while 1:

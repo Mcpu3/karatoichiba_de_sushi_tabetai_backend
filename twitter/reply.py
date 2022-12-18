@@ -1,16 +1,25 @@
 from datetime import datetime, timedelta
+import os
+import dotenv
 import tweepy
 
-from pn_predictor.predict_pns import predict
-from . import secret
+from pn_predictor.predict_pns import predict_pns
+
+dotenv.load_dotenv()
+id = os.environ["ID"]
+consumer_key = os.environ["CONSUMER_KEY"]
+consumer_secret = os.environ["CONSUMER_SECRET"]
+access_token = os.environ["ACCESS_TOKEN"]
+access_token_secret = os.environ["ACCESS_TOKEN_SECRET"]
+bearer_token = os.environ["BEARER_TOKEN"]
 
 def set_client() -> None:
     return tweepy.Client(
-        consumer_key = secret.consumer_key,
-        consumer_secret = secret.consumer_secret,
-        access_token = secret.access_token,
-        access_token_secret = secret.access_token_secret,
-        bearer_token = secret.bearer_token
+        consumer_key = consumer_key,
+        consumer_secret = consumer_secret,
+        access_token = access_token,
+        access_token_secret = access_token_secret,
+        bearer_token = bearer_token
     )
 
 def stream(client, query, start_time) -> None:
@@ -20,14 +29,14 @@ def stream(client, query, start_time) -> None:
         query = query,
         start_time = str(start_time.isoformat()) + "+09:00",
         end_time = str(end_time.isoformat()) + "+09:00",
-        max_results = 100
+        max_results = 20
     )
 
     data = []
     if tweets is not None:
         for t in str(tweets[0]).split(", "):
             t = t.translate(str.maketrans({"[": None, "]": None, "<": None, ">": None, "'": None}))
-            t = t.replace("Tweet id=", "").replace("text=", "").replace("@" + secret.id, "").replace("\n", "")
+            t = t.replace("Tweet id=", "").replace("text=", "").replace("@" + id, "").replace("\n", "")
             if t != "None":
                 data.append([t.split(" ", 1)[0], t.split(" ", 1)[1]])
 
@@ -46,7 +55,7 @@ def stream(client, query, start_time) -> None:
                     query = "-is:retweet " + s,
                     start_time = str(before3d.isoformat()) + "+09:00",
                     end_time = str(now.isoformat()) + "+09:00",
-                    max_results = 100
+                    max_results = 20
                 )
 
                 l = []
@@ -58,7 +67,7 @@ def stream(client, query, start_time) -> None:
                 print(l)
 
                 if l != []:
-                    f= predict(l, './pn_predictor/misc/count_vectorizer.pickle', './pn_predictor/misc/model.pickle')
+                    f= predict_pns(l, './pn_predictor/misc/count_vectorizer.pickle', './pn_predictor/misc/model.pickle')
                     print(f)
 
                     if f.count(1) >= f.count(-1):

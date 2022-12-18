@@ -1,13 +1,18 @@
 from datetime import datetime, timedelta
+import os
+import dotenv
 import tweepy
 
-from pn_predictor.predict_pns import predict
-from . import secret
+from pn_predictor.predict_pns import predict_pns
+
+dotenv.load_dotenv()
+consumer_key = os.environ["CONSUMER_KEY"]
+consumer_secret = os.environ["CONSUMER_SECRET"]
 
 def set_client(at, ats) -> None:
     return tweepy.Client(
-        consumer_key = secret.consumer_key,
-        consumer_secret = secret.consumer_secret,
+        consumer_key = consumer_key,
+        consumer_secret = consumer_secret,
         access_token = at,
         access_token_secret = ats
     )
@@ -15,13 +20,13 @@ def set_client(at, ats) -> None:
 def stream(client, rp_client, user_name) -> None:
 
     now = datetime.now().replace(second=0, microsecond=0)
-    before1d = (datetime.now() - timedelta(days=1)).replace(second=0, microsecond=0)
+    before1d = (datetime.now() - timedelta(days=1) + timedelta(minutes=3)).replace(second=0, microsecond=0)
 
     tweets = rp_client.search_recent_tweets(
         query = "-is:retweet from:" + user_name,
         start_time = str(before1d.isoformat()) + "+09:00",
         end_time = str(now.isoformat()) + "+09:00",
-        max_results = 100
+        max_results = 20
     )
 
     l = []
@@ -34,7 +39,7 @@ def stream(client, rp_client, user_name) -> None:
 
     s = ""
     if l != []:
-        f= predict(l, './pn_predictor/misc/count_vectorizer.pickle', './pn_predictor/misc/model.pickle')
+        f= predict_pns(l, './pn_predictor/misc/count_vectorizer.pickle', './pn_predictor/misc/model.pickle')
         print(f)
 
         if f.count(1) >= f.count(-1):

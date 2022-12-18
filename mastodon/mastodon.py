@@ -2,7 +2,7 @@ from mastodon import Mastodon
 from mastodon_bot.secret import secret
 from datetime import datetime, timezone, timedelta
 from lxml import html
-from pn_predictor.predict_pns import predict
+from pn_predictor.predict_pns import predict_pns
 
 class MastodonReply:
     def __init__(self) -> None:
@@ -118,7 +118,7 @@ class MastodonReply:
                 predict_sentence_list.append(t)
 
         if predict_sentence_list != []:
-            f= predict(predict_sentence_list, './pn_predictor/misc/count_vectorizer.pickle', './pn_predictor/misc/model.pickle')
+            f= predict_pns(predict_sentence_list, './pn_predictor/misc/count_vectorizer.pickle', './pn_predictor/misc/model.pickle')
             print(f)
 
             if f.count(1) >= f.count(-1):
@@ -134,7 +134,7 @@ class MastodonReply:
         toot_list = self.__get_oneday_toot_user(account_id)
         sentence = account_name
         if toot_list != []:
-            f = predict(toot_list, './pn_predictor/misc/count_vectorizer.pickle', './pn_predictor/misc/model.pickle')
+            f = predict_pns(toot_list, './pn_predictor/misc/count_vectorizer.pickle', './pn_predictor/misc/model.pickle')
             print(f)
 
             if f.count(1) >= f.count(-1):
