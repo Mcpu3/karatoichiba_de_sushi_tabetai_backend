@@ -41,8 +41,6 @@ def stream(client, query, start_time) -> None:
                 data.append([t.split(" ", 1)[0], t.split(" ", 1)[1]])
 
         for p in data:
-            print(p[0])
-            print(p[1])
             s = str(p[1]).replace("\\n", "").replace("\\u3000","")
             now = datetime.now().replace(second=0, microsecond=0)
             before3d = (datetime.now() - timedelta(days=3)).replace(second=0, microsecond=0)
@@ -56,15 +54,13 @@ def stream(client, query, start_time) -> None:
                     query = "-is:retweet " + s,
                     start_time = str(before3d.isoformat()) + "+09:00",
                     end_time = str(now.isoformat()) + "+09:00",
-                    max_results = 10
+                    max_results = 13
                 )
 
                 l = []
                 for t in str(tweets[0]).split(", "):
                     t = t.translate(str.maketrans({"[": None, "]": None, "<": None, ">": None, "'": None}))
-                    print(t)
                     t = t.replace("Tweet id=", "").replace("text=", "").replace("　", "").replace("\\n", "")
-                    print(t)
                     if t != "None":
                         l.append(t.split(" ", 1)[1])
                 print(l)
@@ -74,12 +70,12 @@ def stream(client, query, start_time) -> None:
                     f= predict_pns(l, './pn_predictor/misc/count_vectorizer.pickle', './pn_predictor/misc/model.pickle')
                     print(f)
 
-                    rate = round(f.count(1)/len(f), -2)
-                    s = "ポジティブ度" + rate + "!\n" + s
+                    rate = round(f.count(1)/len(f), 2)
+                    s = "ポジティブ度" + str(rate) + "！" + s
                     if rate > 0.85:
                         s += "のことはみんな大好きみたいだよ！いぇいいぇい"
                     elif rate > 0.55:
-                        s += "のことが好きな人はたくさんいたよ！"
+                        s += "のことが好きな人はたくさんいるみたい！"
                     elif rate > 0.25:
                         s += "って好みが分かれてるのかな……？"
                     else:

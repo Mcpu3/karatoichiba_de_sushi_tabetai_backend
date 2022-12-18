@@ -27,7 +27,7 @@ def stream(client, rp_client, user_name) -> None:
         query = "-is:retweet from:" + user_name,
         start_time = str(before1d.isoformat()) + "+09:00",
         end_time = str(now.isoformat()) + "+09:00",
-        max_results = 10
+        max_results = 13
     )
 
     l = []
