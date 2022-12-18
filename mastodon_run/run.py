@@ -69,7 +69,7 @@ class MastodonReply:
 
             return text
 
-    def __get_oneday_toot_user(self, account_id: str = None, limit: int = 20) -> list:
+    def __get_oneday_toot_user(self, account_id: str = None) -> list:
         before_a_day_time = datetime.now(tz=timezone.utc) - timedelta(days=1)
         stop_bool = False
         oneday_toot_list = []
@@ -79,9 +79,6 @@ class MastodonReply:
             for toot in toot_list:
                 if toot['created_at'] > before_a_day_time:
                     if toot['account']['id'] == account_id:
-                        if len(oneday_toot_list) >= limit:
-                            stop_bool = True
-                            break
                         toot_temp = self.__extract_content_text(toot['content'])
                         oneday_toot_list.append(toot_temp)
                 else:
@@ -91,7 +88,7 @@ class MastodonReply:
         
         return oneday_toot_list
 
-    def __get_any_day_toot(self, day: int, limit: int = 20) -> list:
+    def __get_any_day_toot(self, day: int) -> list:
         before_any_day_time = datetime.now(tz=timezone.utc) - timedelta(days=day)
         stop_bool = False
         oneday_toot_list = []
@@ -101,9 +98,6 @@ class MastodonReply:
             for toot in toot_list:
                 if toot['created_at'] > before_any_day_time:
                     if not toot['account']['bot']:
-                        if len(oneday_toot_list) >= limit:
-                            stop_bool = True
-                            break
                         toot_temp = self.__extract_content_text(toot['content'])
                         oneday_toot_list.append(toot_temp)
                 else:
@@ -113,14 +107,17 @@ class MastodonReply:
         
         return oneday_toot_list
     
-    def __predict_reply_message(self, reply_to_status, message: str):
+    def __predict_reply_message(self, reply_to_status, message: str, limit: int = 20):
         toot_list = self.__get_any_day_toot(7)
         predict_sentence_list = []
         sentence = message.replace(' ', '').replace('　', '').replace('\n', '')
         for t in toot_list:
             if sentence in t:
+                if len(predict_sentence_list) >= limit:
+                    break
                 predict_sentence_list.append(t)
 
+        print(predict_sentence_list)
         if predict_sentence_list != []:
             f= predict_pns(predict_sentence_list, './pn_predictor/misc/count_vectorizer.pickle', './pn_predictor/misc/model.pickle')
             print(f'mastodon_bot : (word){sentence} {str(f)}')
@@ -137,9 +134,11 @@ class MastodonReply:
 
         self.mastodon.status_reply(reply_to_status, sentence)
         
-    def __predict_reply_user(self, reply_to_status, account_id: str, account_name: str):
+    def __predict_reply_user(self, reply_to_status, account_id: str, account_name: str, limit: int = 20):
         toot_list = self.__get_oneday_toot_user(account_id)
+        toot_list[:limit]
         sentence = account_name
+        print(toot_list)
         if toot_list != []:
             f = predict_pns(toot_list, './pn_predictor/misc/count_vectorizer.pickle', './pn_predictor/misc/model.pickle')
             print(f'mastodon_bot : (user){account_name} {str(f)}')
