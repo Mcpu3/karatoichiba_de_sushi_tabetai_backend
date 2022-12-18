@@ -2,8 +2,8 @@
 `pip install -r requirements.txt`<br/>
 
 # Botの動かし方
-* Discordで共有したsecret.pyというファイルをtwitterフォルダ内に配置<br/>
-* ターミナルで`py main.py`を実行<br/>
+* Discordで共有した.envをルートディレクトリに配置<br/>
+* ターミナルで`py main.py`と`py server.py`を実行<br/>
 
 # PN予測
 
