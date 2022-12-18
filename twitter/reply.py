@@ -41,8 +41,9 @@ def stream(client, query, start_time) -> None:
                 data.append([t.split(" ", 1)[0], t.split(" ", 1)[1]])
 
         for p in data:
-
-            s = str(p[1]).replace("\\n", "")
+            print(p[0])
+            print(p[1])
+            s = str(p[1]).replace("\\n", "").replace("\\u3000","")
             now = datetime.now().replace(second=0, microsecond=0)
             before3d = (datetime.now() - timedelta(days=3)).replace(second=0, microsecond=0)
 
