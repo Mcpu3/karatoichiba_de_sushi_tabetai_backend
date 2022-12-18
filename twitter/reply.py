@@ -70,18 +70,21 @@ def stream(client, query, start_time) -> None:
                 print(l)
 
                 if l != []:
+
                     f= predict_pns(l, './pn_predictor/misc/count_vectorizer.pickle', './pn_predictor/misc/model.pickle')
                     print(f)
 
-                    if f.count(1) >= f.count(-1):
-                        if f.count(1)/len(f) > 0.85 :
-                         s += "のことはみんな大好きみたいだよ！"
+                    rate = round(f.count(1)/len(f), -2)
+                    s = "ポジティブ度" + rate + "!\n" + s
+                    if rate > 0.85:
+                        s += "のことはみんな大好きみたいだよ！いぇいいぇい"
+                    elif rate > 0.55:
+                        s += "のことが好きな人はたくさんいたよ！"
+                    elif rate > 0.25:
+                        s += "って好みが分かれてるのかな……？"
+                    else:
+                        s += "のことはあんまり良く思われてないみたい……"
 
-                        elif 0.5 < f.count(1)/len(f) :
-                         s += "のことは結構良く思われているみたい！"
-                         
-                        else  :
-                         s += "のことはあんまり良く思われてないみたい……"
                 else:
                     s += "について話してる人はいなかったみたい……"
 
