@@ -5,9 +5,14 @@ WORKDIR /app
 EXPOSE 8000
 
 COPY . /app/
+COPY .env /app/.env
 
 RUN pip install -r requirements.txt
 
+RUN chmod +x startup.sh
+
 # RUN python main.py > main.log &
 
-CMD ["python", "server.py"]
+# ENTRYPOINT ["python", "server.py"]
+
+ENTRYPOINT [ "sh", "startup.sh" ]
