@@ -42,7 +42,7 @@ def stream(client, query, start_time) -> None:
 
         for p in data:
 
-            s = str(p[1])
+            s = str(p[1]).replace("\\n", "")
             now = datetime.now().replace(second=0, microsecond=0)
             before3d = (datetime.now() - timedelta(days=3)).replace(second=0, microsecond=0)
 
@@ -61,7 +61,9 @@ def stream(client, query, start_time) -> None:
                 l = []
                 for t in str(tweets[0]).split(", "):
                     t = t.translate(str.maketrans({"[": None, "]": None, "<": None, ">": None, "'": None}))
-                    t = t.replace("Tweet id=", "").replace("text=", "").replace("　", "").replace("\n", "")
+                    print(t)
+                    t = t.replace("Tweet id=", "").replace("text=", "").replace("　", "").replace("\\n", "")
+                    print(t)
                     if t != "None":
                         l.append(t.split(" ", 1)[1])
                 print(l)
@@ -71,9 +73,14 @@ def stream(client, query, start_time) -> None:
                     print(f)
 
                     if f.count(1) >= f.count(-1):
-                        s += "のことはみんな大好きみたいだよ！"
-                    else :
-                        s += "のことはあんまり良く思われてないみたい……"
+                        if f.count(1)/len(f) > 0.85 :
+                         s += "のことはみんな大好きみたいだよ！"
+
+                        elif 0.5 < f.count(1)/len(f) :
+                         s += "のことは結構良く思われているみたい！"
+                         
+                        else  :
+                         s += "のことはあんまり良く思われてないみたい……"
                 else:
                     s += "について話してる人はいなかったみたい……"
 

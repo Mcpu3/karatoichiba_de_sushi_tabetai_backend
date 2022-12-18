@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 import os
 import dotenv
 import tweepy
+import random
 
 from pn_predictor.predict_pns import predict_pns
 
@@ -32,7 +33,7 @@ def stream(client, rp_client, user_name) -> None:
     l = []
     for t in str(tweets[0]).split(", "):
         t = t.translate(str.maketrans({"[": None, "]": None, "<": None, ">": None, "'": None}))
-        t = t.replace("Tweet id=", "").replace("text=", "").replace("　", "").replace("\n", "")
+        t = t.replace("Tweet id=", "").replace("text=", "").replace("　", "").replace("\\n", "")
         if t != "None":
             l.append(t.split(" ", 1)[1])
     print(l)
@@ -42,12 +43,32 @@ def stream(client, rp_client, user_name) -> None:
         f= predict_pns(l, './pn_predictor/misc/count_vectorizer.pickle', './pn_predictor/misc/model.pickle')
         print(f)
 
-        if f.count(1) >= f.count(-1):
-            s = "今日は楽しそうだったね！ Botより"
+        if f.count(1) >= f.count(-1) :
+            number = random.randrange(3)
+            if number == 0:
+              s = "今日は一日楽しそうだったね！！いぇいいぇい"
+            elif number == 1:
+              s = "今日は一日を満喫だね！"
+            elif number == 2:
+                s = "今日は一日を満喫だね！"
+
         else :
-            s = "今日はあんまり調子がでなかったのかな…… Botより"
+            number = random.randrange(3)
+            if number == 0 :
+             s = "今日はネガティブガーン・・・・"
+            elif number == 1:
+              s = "今日はなんだか元気がないね・・"
+            elif number == 2:
+                s = "今日はなんだか悲しいそうだね・・・"
     else:
-        s = "今日は忙しかったのかな…… Botより"
+        number = random.randrange(3)
+        if number == 0 :
+             s = "今日は忙しかったのかな…… しっかり休んでね泣"
+        elif number == 1:
+              s = "なにもつぶやいてないってことは，現実が充実してる証拠だよ！"
+        elif number == 2:
+                s = "何もつぶやかないの？ウサ子さみしいな・・"
+       
 
     client.create_tweet(text = s)
 
