@@ -2,7 +2,7 @@
 `pip install -r requirements.txt`<br/>
 
 # Botの動かし方
-* Discordで共有した.envをルートディレクトリに配置<br/>
+* ルートディレクトリに`.env`ファイルを作成しDiscordで共有した内容をコピペ<br/>
 * ターミナルで`py main.py`と`py server.py`を実行<br/>
 
 # PN予測
