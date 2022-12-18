@@ -5,6 +5,7 @@ dill==0.3.6
 distlib==0.3.6
 filelock==3.8.2
 Flask==2.2.2
+gunicorn==20.1.0
 isort==5.11.1
 joblib==1.2.0
 lazy-object-proxy==1.8.0
